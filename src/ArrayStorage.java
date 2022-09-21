@@ -12,12 +12,22 @@ public class ArrayStorage {
     }
 
     void save(Resume resume) {
+        if(this.size() == storage.length) {
+            System.out.println("Array storage is full");
+            return;
+        }
+
+        if(resume.uuid == null) {
+            System.out.println("uuid is not be null");
+            return;
+        }
+
         if (this.get(resume.uuid) != null) {
             System.out.println("Resume with uuid equals " + resume.uuid + " is already exists");
             return;
         }
 
-        for (int i = 0; i < 10000; i++) {
+        for (int i = 0; i < storage.length; i++) {
             if (storage[i] == null) {
                 storage[i] = resume;
                 break;
@@ -35,6 +45,11 @@ public class ArrayStorage {
     }
 
     void delete(String uuid) {
+        if(uuid == null) {
+            System.out.println("uuid is not be null");
+            return;
+        }
+
         int sizeStorage = this.size();
         int remoteIterator = -1;
         for (int i = 0; i < sizeStorage; i++) {
@@ -44,17 +59,18 @@ public class ArrayStorage {
             }
         }
 
-        System.out.println(storage.length);
         if (remoteIterator == -1) {
+            System.out.println("uuid is not found");
             return;
         }
 
         if (remoteIterator == storage.length - 1) {
             storage[remoteIterator] = null;
         } else {
-            for (int i = remoteIterator; i < sizeStorage; i++) {
+            for (int i = remoteIterator; i < sizeStorage - 1; i++) {
                 storage[i] = storage[i + 1];
             }
+            storage[sizeStorage - 1] = null;
         }
     }
 
@@ -65,16 +81,15 @@ public class ArrayStorage {
         int sizeStorage = this.size();
         Resume[] storageNotNull = new Resume[sizeStorage];
         for (int i = 0; i < sizeStorage; i++) {
-            if (storage[i] != null)
-                storageNotNull[i] = storage[i];
+            storageNotNull[i] = storage[i];
         }
         return storageNotNull;
     }
 
     int size() {
         int size = 0;
-        for (int i = 0; i < 10000; i++) {
-            if (storage[i] != null) {
+        for (Resume resume : storage) {
+            if (resume != null) {
                 size++;
             }
         }
